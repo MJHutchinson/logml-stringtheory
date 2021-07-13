@@ -1,0 +1,7 @@
+numpy
+matplotlib
+jax
+torch
+jupyter
+black
+ripser

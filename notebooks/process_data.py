@@ -12,4 +12,7 @@ for id in ids:
     print(id)
     data = load_vector_bundle_solutions_txt(id, data_folder)
     np.save(f.replace('txt', 'npy'), data)
-# %%
+
+with open('data/bundle_solutions/_ids.txt', 'w') as f:
+    for id in ids:
+        f.write(f'{id}\n')
