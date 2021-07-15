@@ -1,25 +1,30 @@
 #!/bin/bash
 
-# Usage: `sbatch`
-
-#SBATCH --job-name=stringML-tda
-#SBATCH --partition=zzi-medium
-#SBATCH --cpus-per-task=1
-#SBATCH --time=14-00:00:00
-#SBATCH --mem=25G
+#SBATCH --job-name=stringMLtda
+#SBATCH --partition=ziz-large
+#SBATCH --time=8:00:00
 #SBATCH --ntasks=1
-#SBATCH --output=slurm_logs/persistent_homology
+#SBATCH --mem-per-cpu=25G 
+#SBATCH --cpus-per-task=1
+#SBATCH --output=slurm_logs/persistent_homology/%A_%a.out
+#SBATCH --error=slurm_logs/persistent_homology/%A_%a.err
 
-#SBATCH --array=1-51%6
+#SBATCH --array=1-51%20
 
-id=awk 'NR==$SLURM_ARRAY_TASK_ID' data/bundle_solutions/_ids.txt
-limit_solutions=100
-data_path=/home/mhutchin/Documents/projects/logml-stringtheory/data/bundle_solutions
-results_path=/home/mhutchin/Documents/projects/logml-stringtheory/results/persitent_homology
-fig_path=/home/mhutchin/Documents/projects/logml-stringtheory/figures/persistent_homology
+source venv/bin/activate
+
+data_path=data/bundle_solutions
+results_path=results/persitent_homology
+fig_path=figures/persistent_homology
+
+com=NR==$SLURM_ARRAY_TASK_ID
+id=$(awk $com $data_path/_ids.txt)
+limit_solutions=10000
+max_homology=2
 
 python scripts/tda.py \
     $id \
+    --max_homology $max_homology \
     --limit_solutions $limit_solutions \
     --save_figs True \
     --data_path $data_path \

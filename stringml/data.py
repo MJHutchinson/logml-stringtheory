@@ -6,7 +6,8 @@ import numpy as np
 
 def get_geometry_ids(data_folder="data/bundle_solutions"):
     return [
-        int(f.split("/")[-1].split(".")[0]) for f in glob.glob(data_folder + "/*.txt")
+        int(f.split("/")[-1].split(".")[0])
+        for f in glob.glob(data_folder + "/[!_]*.txt")
     ]
 
 
@@ -22,6 +23,15 @@ def load_vector_bundle_solutions_txt(id, data_folder="data/bundle_solutions"):
     s = np.array(s)
 
     return s
+
+
+def generate_negative_data_reduced(n, solutions):
+    max_int = np.max(np.abs(solutions))
+    solution_shape = solutions.shape[1:]
+
+    negative_solutions = np.random.randint(-max_int, max_int, (n,) + solution_shape)
+
+    return negative_solutions
 
 
 def load_vector_bundle_solutions_npy(id, data_folder="data/bundle_solutions"):

@@ -1,4 +1,4 @@
-# virtualenv -p python3.8 venv
+virtualenv -p python3.8 venv
 
 source venv/bin/activate
 

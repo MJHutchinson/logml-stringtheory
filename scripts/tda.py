@@ -1,3 +1,4 @@
+import os
 import click
 
 from stringml.data import (
@@ -6,7 +7,7 @@ from stringml.data import (
     reduce_solutions,
     get_geometry_ids,
 )
-from stringml.tda import tda
+from stringml.tda import persistent_homology
 
 base_path = "."
 
@@ -23,6 +24,12 @@ def get_data(id):
 
 @click.command()
 @click.argument("id", type=int)
+@click.option(
+    "--max_homology",
+    type=int,
+    default=1,
+    help="max homology to evaluate",
+)
 @click.option(
     "--limit_solutions",
     type=int,
@@ -53,10 +60,16 @@ def get_data(id):
     default=fig_path,
     help="path to the figures folder",
 )
-def compute_tda(id, limit_solutions, save_figs, data_path, results_path, fig_path):
+def compute_persistent_homology(
+    id, max_homology, limit_solutions, save_figs, data_path, results_path, fig_path
+):
     data = get_data(id)
-    tda(
+    os.makedirs(results_path, exist_ok=True)
+    if save_figs:
+        os.makedirs(fig_path, exist_ok=True)
+    persistent_homology(
         id,
+        max_homology=max_homology,
         limit_solutions=None if limit_solutions == 0 else limit_solutions,
         save_figs=save_figs,
         data_folder=data_path,
@@ -66,4 +79,4 @@ def compute_tda(id, limit_solutions, save_figs, data_path, results_path, fig_pat
 
 
 if __name__ == "__main__":
-    compute_tda()
+    compute_persistent_homology()
